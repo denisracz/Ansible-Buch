@@ -24,4 +24,4 @@ Richtig ist **Antwort B**: Erzeugt neue Variablen wie ansible_host aus den Metad
 
 ***Frage 5***
 
-Richtig ist **Antwort C**: Immer idempotent schreiben, um wiederholbare Ergeb￾nisse zu gewährleisten
+Richtig ist **Antwort C**: Immer idempotent schreiben, um wiederholbare Ergebnisse zu gewährleisten
