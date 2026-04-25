@@ -6,7 +6,7 @@ Richtig ist **Antwort C**: `molecule.yml`
 
 ***Frage 2***
 
-Richtig ist **Antwort A**: Ein Playbook kann mehrmals laufen, ohne unnötige Ände￾rungen zu erzeugen.
+Richtig ist **Antwort A**: Ein Playbook kann mehrmals laufen, ohne unnötige Änderungen zu erzeugen.
 
 ---
 
