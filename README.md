@@ -1,4 +1,4 @@
-# Einstieg in Ansible – Das offizielle Repository zum Buch
+# Einstieg in Ansible - Das offizielle Repository zum Buch
 Dieses Repository begleitet das Buch "[Einstieg in Ansible: Schritt für Schritt vom ersten Playbook zur professionellen Automatisierung](https://www.mitp.de/IT-WEB/Einstieg-in-Ansible.html)" von Denis Racz (mitp-Verlag).
 
 Es dient als praktischer Werkzeugkasten für alle Beispiele aus dem Buch.
