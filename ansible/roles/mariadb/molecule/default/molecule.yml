@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+platforms:
+  - name: instance
+    image: docker.io/geerlingguy/docker-ubuntu2404-ansible
+  - name: debian12
+    image: docker.io/geerlingguy/docker-debian12-ansible
+  - name: debian13
+    image: docker.io/geerlingguy/docker-debian13-ansible
+  - name: ubuntu2204
+    image: docker.io/geerlingguy/docker-ubuntu2204-ansible

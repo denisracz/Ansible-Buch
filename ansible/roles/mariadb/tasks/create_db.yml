@@ -1,0 +1,12 @@
+---
+- name: PyMySQL installieren
+  ansible.builtin.apt:
+    name: python3-pymysql
+    state: present
+
+- name: Datenbank anlegen
+  community.mysql.mysql_db:
+    name: "{{ item.name }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+  loop: "{{ db }}"

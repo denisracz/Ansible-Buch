@@ -1,0 +1,46 @@
+---
+- name: Windows Server einrichten
+  hosts: windows
+  tasks:
+    - name: Ordner erstellen
+      ansible.windows.win_file:
+        path: C:\Temp
+        state: directory
+
+    - name: Gruppe anlegen
+      ansible.windows.win_group:
+        name: deploy
+        description: Deploy Group
+        state: present
+
+    - name: User anlegen und zu Deploy Gruppe hinzufügen
+      ansible.windows.win_user:
+        name: erika
+        password: eR1k4P4ssw0rd
+        state: present
+        groups:
+          - deploy
+
+    - name: IIS installieren (Web-Server und Web-Common-Http)
+      ansible.windows.win_feature:
+        name:
+          - Web-Server
+          - Web-Common-Http
+        state: present
+
+    - name: Chocolatey installieren (falls nicht vorhanden)
+      chocolatey.chocolatey.win_chocolatey:
+        name: chocolatey
+        state: present
+
+    - name: Notepad++ mit Chocolatey installieren
+      chocolatey.chocolatey.win_chocolatey:
+        name: notepadplusplus
+        state: present
+
+    # - name: Windows Update
+    #   ansible.windows.win_updates:
+    #     category_names:
+    #       - SecurityUpdates
+    #       - CriticalUpdates
+    #     reboot: true

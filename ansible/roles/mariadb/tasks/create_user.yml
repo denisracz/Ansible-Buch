@@ -1,0 +1,12 @@
+---
+- name: Benutzer anlegen
+  community.mysql.mysql_user:
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.priv }}"
+    host: "{{ item.host }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+  loop: "{{ db_users }}"
+  tags:
+    - db_users

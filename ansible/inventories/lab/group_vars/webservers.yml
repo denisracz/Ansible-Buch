@@ -1,0 +1,7 @@
+package: httpd
+# db_password: !vault |
+#           $ANSIBLE_VAULT;1.1;AES256
+#           # Gekürzt
+db_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt

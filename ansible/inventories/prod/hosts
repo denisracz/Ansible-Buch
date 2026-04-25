@@ -1,0 +1,13 @@
+[webservers]
+prod-web1 ansible_host=192.168.57.11 ansible_ssh_private_key_file=~/vagrant/prod-web1/.vagrant/machines/default/virtualbox/private_key
+prod-web2 ansible_host=192.168.57.12 ansible_ssh_private_key_file=~/vagrant/prod-web2/.vagrant/machines/default/virtualbox/private_key
+
+[dbservers]
+prod-db1 ansible_host=192.168.57.21 ansible_ssh_private_key_file=~/vagrant/prod-db1/.vagrant/machines/default/virtualbox/private_key
+
+[servers:children]
+webservers
+dbservers
+
+[servers:vars]
+ansible_user=vagrant

@@ -1,0 +1,63 @@
+---
+- name: Apache Container bereitstellen
+  hosts: web1
+  become: true
+  tasks:
+    - name: Podman installieren
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
+    - name: Notwendige SELinux-Pakete installieren
+      ansible.builtin.dnf:
+        name: python3-libsemanage
+        state: present        
+
+    - name: Firewall so konfigurieren, dass der Containerport zugelassen wird
+      ansible.posix.firewalld:
+        port: 80/tcp
+        permanent: true
+        state: enabled
+      notify: Reload firewall
+        
+    - name: SELinux für Containerverbindungen aktivieren
+      ansible.posix.seboolean:
+        name: container_connect_any
+        state: yes
+        persistent: yes
+        
+    - name: Container starten
+      ansible.builtin.systemd:
+        name: container-nextcloud.service
+        enabled: true
+        state: started
+
+    - name: Überprüfen, ob die Systemd-Unit-Datei für den Container existiert
+      ansible.builtin.stat:
+        path: /etc/systemd/system/container-nextcloud.service
+      register: service_file
+
+    - name: Systemd-Unit für nextcloud erzeugen mit containers.podman.podman_generate_systemd
+      containers.podman.podman_generate_systemd:
+        name: nextcloud
+        no_header: true
+        restart_policy: always
+        dest: /etc/systemd/system/
+      notify:
+        - systemd daemon reload
+        - systemd nextcloud service starten und enablen
+      when: not service_file.stat.exists
+
+  handlers:
+    - name: Reload firewall
+      command: firewall-cmd --reload
+
+    - name: systemd daemon reload
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: systemd nextcloud service starten und enablen
+      ansible.builtin.systemd:
+        name: container-nextcloud.service
+        enabled: true
+        state: started

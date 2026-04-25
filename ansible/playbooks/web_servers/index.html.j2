@@ -1,0 +1,10 @@
+<html>
+  <body>
+    <h1>Willkommen bei {{ inventory_hostname }}</h1>
+    <h2>Dieser Server stellt eine/n {{ zweck }} bereit.</h2>
+    <p>Hostname der VM: {{ ansible_facts['hostname'] }}</p>
+    <p>OS: {{ ansible_facts['distribution'] }}</p>
+    <p>Code Name: {{ ansible_facts['distribution_release'] }}</p>
+    <p>Major Version: {{ ansible_facts['distribution_major_version'] }}</p>
+  </body>
+</html>

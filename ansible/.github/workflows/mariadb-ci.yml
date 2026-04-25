@@ -1,0 +1,55 @@
+---
+name: CI                           # Workflow-Name
+
+'on':                              # Wann soll der Workflow laufen?
+  pull_request:                    # Bei Pull Requests
+  push:                            # Bei Pushes – aber nur im main-Branch
+    branches:
+      - main
+    paths:
+      - 'roles/mariadb/**'         # Nur wenn Dateien in diesem Pfad geändert wurden      
+
+jobs:                              # Vergleichbar mit Plays
+  test:                            # Job-Name
+    name: Molecule mariadb         # Anzeigename im UI
+    runs-on: ubuntu-latest         # Runner-Umgebung
+
+    strategy:                      # Test-Matrix für mehrere Distributionen
+      matrix:
+        distro:
+          - debian12
+          - debian13
+          - ubuntu2204
+          - ubuntu2404
+
+    steps:                         # Schritte, wie Ansible-Tasks
+      - name: Check out the codebase
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: pip3 install ansible molecule[podman] podman yamllint ansible-lint
+
+      - name: Run yamllint
+        run: |
+          cd roles/mariadb && yamllint -d '{extends: default, ignore: "molecule/"}' .
+        
+      - name: Run ansible-lint
+        run: cd roles/mariadb && ansible-lint --exclude=molecule/
+
+      - name: Create symlink for role
+        run: |
+          mkdir -p roles/mariadb/molecule/default/roles
+          cd roles/mariadb/molecule/default/roles
+          ln -s ../../../ mariadb
+          
+      - name: Run Molecule tests
+        run: cd roles/mariadb && molecule test
+        env:
+          PY_COLORS: '1'
+          ANSIBLE_FORCE_COLOR: '1'
+          MOLECULE_DISTRO: ${{ matrix.distro }}

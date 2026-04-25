@@ -1,0 +1,6 @@
+---
+- name: Configure MariaDB on AWS EC2
+  hosts: aws_ec2
+  become: true
+  roles:
+    - mariadb

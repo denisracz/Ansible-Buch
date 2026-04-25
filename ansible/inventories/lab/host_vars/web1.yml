@@ -1,0 +1,13 @@
+zweck: blog
+apache_custom_config: |
+  <VirtualHost *:80>
+      ServerName web1.example.com
+      DocumentRoot /var/www/html/blog
+      ErrorLog ${APACHE_LOG_DIR}/web1_error.log
+      CustomLog ${APACHE_LOG_DIR}/web1_access.log combined
+  </VirtualHost>
+  <Directory /var/www/html/blog>
+      Options Indexes FollowSymLinks
+      AllowOverride All
+      Require all granted
+  </Directory>

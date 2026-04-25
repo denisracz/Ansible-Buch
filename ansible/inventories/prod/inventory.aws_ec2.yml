@@ -1,0 +1,16 @@
+---
+plugin: amazon.aws.aws_ec2
+aws_access_key: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  # Gekürzt
+aws_secret_key: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  # Gekürzt
+regions:
+  - eu-central-1
+filters:
+  tag:Role: mariadb
+compose:
+  ansible_host: public_ip_address
+  ansible_user: "'ubuntu'"
+  ansible_ssh_private_key_file: "'~/.ssh/{{ key_name }}.pem'"

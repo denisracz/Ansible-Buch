@@ -1,0 +1,20 @@
+---
+- name: Webserver einrichten
+  hosts: webservers
+  become: true
+  roles:
+    - apache
+    - wordpress
+  tags: 
+    - webserver
+    - apache
+    - wordpress
+
+- name: DB bereitstellen
+  hosts: dbservers
+  become: true
+  roles:
+    - mariadb
+  tags:
+    - dbserver
+    - mariadb

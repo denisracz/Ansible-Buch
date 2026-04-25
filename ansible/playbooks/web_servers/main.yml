@@ -1,0 +1,42 @@
+- name: Webserver einrichten
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: DB-Passwort anzeigen (nur zu Demo-Zwecken!)
+      ansible.builtin.debug:
+        msg: "Passwort ist {{ db_password }}"
+
+    - name: variablen debuggen
+      ansible.builtin.debug:
+        msg: "Mein Zweck ist {{ zweck }} und ich bin {{ inventory_hostname }}"
+        
+    - name: httpd installieren
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: index.html bereitstellen
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+      notify: httpd neustarten
+
+    - name: httpd starten
+      ansible.builtin.systemd:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: port 80 zulassen
+      ansible.builtin.firewalld:
+        port: 80/tcp
+        permanent: true
+        immediate: true
+        state: enabled
+
+  handlers:
+    - name: httpd neustarten
+      ansible.builtin.systemd:
+        name: httpd
+        state: restarted

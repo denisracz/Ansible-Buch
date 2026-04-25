@@ -1,0 +1,30 @@
+db_wp_name: prod_wordpress
+db_wp_user: prod_user
+db_wp_host: 192.168.57.21
+db_wp_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt
+
+db:
+  - name: prod_wordpress
+  - name: prod_phpbb
+
+db_users:
+  - name: wp_user
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt
+    priv: "prod_wordpress.*:ALL"
+    host: "%"
+  - name: phpbb_user
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt
+    priv: "prod_phpbb.*:ALL"
+    host: "%"
+  - name: backup_user
+    password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt
+    priv: "*.*:ALL"
+    host: "%"

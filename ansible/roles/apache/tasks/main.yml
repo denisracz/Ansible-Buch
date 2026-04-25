@@ -1,0 +1,62 @@
+---
+- name: Apache installieren
+  ansible.builtin.dnf:
+    name:
+      - httpd
+    state: present
+
+- name: Apache Dienst starten
+  ansible.builtin.service:
+    name: httpd
+    state: started
+    enabled: true
+
+- name: HTTP und HTTPS in firewalld dauerhaft erlauben
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  loop:
+    - http
+    - https
+
+- name: SELinux Python Libraries installieren
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - libselinux-python3
+    - policycoreutils-python3
+
+- name: SELinux Kontext für /var/www/html/ setzen
+  community.general.sefcontext:
+    target: "/var/www/html(/.*)?"
+    setype: httpd_sys_rw_content_t
+    state: present
+
+- name: SELinux Boolean für Netzwerkverbindungen aktivieren
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+
+- name: Custom-Konfig bereitstellen
+  ansible.builtin.blockinfile:
+    block: "{{ apache_custom_config }}"
+    path: /etc/httpd/conf.d/custom.conf
+    create: true
+    mode: "0644"
+  when: apache_custom_config is defined
+
+- name: Register result of a task
+  ansible.builtin.copy:
+    dest: "/tmp/placeholder"
+    content: "Ansible made this!"
+    mode: "0600"
+  register: result # <-- Registers the result of the task.
+
+- name: Second command to run
+  ansible.builtin.debug:
+    msg: The placeholder file was modified!
+  when: result.changed # noqa: no-handler

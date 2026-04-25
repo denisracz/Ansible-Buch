@@ -1,0 +1,6 @@
+db_wp_name: wordpress
+db_wp_user: wp_user
+db_wp_host: 192.168.56.21
+db_wp_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          # Gekürzt

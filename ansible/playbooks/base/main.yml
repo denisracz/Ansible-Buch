@@ -1,0 +1,15 @@
+- name: Base Configuration
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Paketliste aktualisieren (nur für Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+      when:
+        - ansible_facts['os_family'] == 'Debian'
+    
+    - name: Package installieren
+      ansible.builtin.package:
+        name: "{{ package}}"
+        state: present

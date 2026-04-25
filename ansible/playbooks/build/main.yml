@@ -1,0 +1,40 @@
+---
+- name: Eigenes Image bauen
+  hosts: web1
+  become: true
+  tasks:
+    - name: Podman installieren
+      ansible.builtin.dnf:
+        name: podman
+        state: present
+
+    - name: Folder erstellen
+      ansible.builtin.file:
+        path: /home/vagrant/web-static
+        state: directory
+        mode: "0755"
+        owner: vagrant
+        group: vagrant
+
+    - name: Containerfile erstellen
+      ansible.builtin.copy:
+        dest: /home/vagrant/web-static/Containerfile
+        content: |
+          FROM docker.io/nginx:alpine
+          COPY index.html /usr/share/nginx/html/
+        mode: "0644"
+        owner: vagrant
+        group: vagrant
+
+    - name: index.html erstellen
+      ansible.builtin.copy:
+        dest: /home/vagrant/web-static/index.html
+        content: "<h1>Ein freundliches hallo</h1>"
+        mode: "0644"
+        owner: vagrant
+        group: vagrant
+
+    - name: Eigenes Image bauen
+      containers.podman.podman_image:
+        name: myweb:v1
+        path: /home/vagrant/web-static/

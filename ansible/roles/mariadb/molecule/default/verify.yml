@@ -1,0 +1,50 @@
+---
+- name: Verify MariaDB installation
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Check if MariaDB is listening on port 3306
+      ansible.builtin.wait_for:
+        port: 3306
+        timeout: 5
+        
+    - name: Create test database
+      community.mysql.mysql_db:
+        name: molecule_test
+        state: present
+        login_user: test_user
+        login_password: testpassword
+      register: db_creation
+        
+    - name: Create test table and insert data
+      community.mysql.mysql_query:
+        login_db: molecule_test
+        login_user: test_user
+        login_password: testpassword
+        query:
+          - CREATE TABLE IF NOT EXISTS test_table (id INT, name VARCHAR(100))
+          - INSERT INTO test_table (id, name) VALUES (1, 'molecule test')
+      register: query_result
+        
+    - name: Verify data was inserted correctly
+      community.mysql.mysql_query:
+        login_db: molecule_test
+        login_user: test_user
+        login_password: testpassword
+        query: SELECT * FROM test_table WHERE id = 1
+      register: select_result
+        
+    - name: Assert data integrity
+      ansible.builtin.assert:
+        that:
+          - select_result.query_result[0][0].name == 'molecule test'
+        fail_msg: "Data verification failed"
+        success_msg: "Data verification succeeded"
+        
+    - name: Clean up - drop test database
+      community.mysql.mysql_db:
+        name: molecule_test
+        state: absent
+        login_user: test_user
+        login_password: testpassword

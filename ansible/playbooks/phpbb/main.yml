@@ -1,0 +1,13 @@
+---
+- name: Webserver einrichten
+  hosts: webservers
+  become: true
+  roles:
+    - apache
+    - phpbb
+
+- name: DB bereitstellen
+  hosts: dbservers
+  become: true
+  roles:
+    - mariadb

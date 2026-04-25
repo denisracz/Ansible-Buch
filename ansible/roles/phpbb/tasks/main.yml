@@ -1,0 +1,11 @@
+---
+- name: phpBB herunterladen
+  ansible.builtin.get_url:
+    url: https://downloads.phpbb.de/pakete/deutsch/3.3/3.3.15/phpBB-3.3.15-deutsch.zip
+    dest: /tmp/phpbb.zip
+
+- name: Entpacken und bereitstellen
+  ansible.builtin.unarchive:
+    src: /tmp/phpbb.zip
+    dest: /var/www/html/
+    remote_src: true
